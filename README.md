@@ -1,7 +1,7 @@
 # Trade 
 
-## EconomyAPI版 
-
+## MoneySystem版 
+## 元は https://github.com/yurisi0212/Trade
 
 ### 概要 
 フリーマーケットです。
