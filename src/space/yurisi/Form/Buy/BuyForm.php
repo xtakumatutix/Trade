@@ -4,7 +4,7 @@
 namespace space\yurisi\Form\Buy;
 
 
-use onebone\economyapi\EconomyAPI;
+use metowa1227\moneysystem\api\core\API;
 use pocketmine\form\Form;
 use pocketmine\item\Item;
 use pocketmine\Player;
@@ -180,11 +180,11 @@ class ResultSerachIDForm implements Form{
 	public function handleResponse(Player $player, $data): void {
 		if(!is_numeric($data)) return;
 		$market=$this->button[$data];
-		if($market["price"]>EconomyAPI::getInstance()->myMoney($player->getName())){
+		if($market["price"]>API::getInstance()->get($player->getName())){
 			$player->sendForm(new self($this->button,$content="§aお金が足りません"));
 			return;
 		}
-		$player->sendForm(new ConfirmSerachIDForm($this->button[$data]["id"],EconomyAPI::getInstance()->myMoney($player->getName())));
+		$player->sendForm(new ConfirmSerachIDForm($this->button[$data]["id"],API::getInstance()->get($player->getName())));
 
 	}
 
@@ -235,8 +235,8 @@ class ConfirmSerachIDForm implements Form{
 				}
 				$item = Item::get($this->data["itemid"], $this->data["itemdamage"], $this->data["amount"]);
 				if ($player->getInventory()->canAddItem($item)) {
-					EconomyAPI::getInstance()->reduceMoney($player->getName(), $this->data["price"]);
-					EconomyAPI::getInstance()->addMoney($this->data["player"], $this->data["price"]);
+					API::getInstance()->reduce($player->getName(), $this->data["price"]);
+					API::getInstance()->increase($this->data["player"], $this->data["price"]);
 					$player->getInventory()->addItem($item);
 					$cls = new YamlConfig();
 					$cls->removeItem($this->data["id"]);
